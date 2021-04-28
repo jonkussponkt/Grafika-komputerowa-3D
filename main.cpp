@@ -1417,24 +1417,22 @@ void klawisz(GLubyte key, int x, int y)
 
 		break;
 	}
-	
-	
 }
 /*###############################################################*/
 
 GLfloat k = 0.05;
-GLfloat adi = -0.017, adj = -1.85;
-GLfloat i = 1.7,  j = 185.0;
+GLfloat adi = -0.17, adj = -15.0;
+GLfloat i = -1.7, j = 0.0;
 
 void timer(int value) {
 
-	i += adi;
+	//i += adi;
 	j += adj;
 
-	if (i > 1.7 || i < 0) {
-		adi = -adi;
-	}
-	if (j > 185.0 || j < 0) {
+	//if (i > 1.0 || i < -1.7) {
+	//	adi = -adi;
+	//}
+	if (j < -650.0 || j > -1.7) {
 		adj = -adj;
 	}
 
@@ -1466,13 +1464,32 @@ void rysuj(void)
 	MV = glm::rotate(MV, (float)glm::radians(kameraZ), glm::vec3(1, 0, 0)); 
 	MV = glm::rotate(MV, (float)glm::radians(kameraX), glm::vec3(0, 1, 0)); 
 
+	MV = glm::translate(MV, glm::vec3(0.0f, 0.0f, i));
+	MV = glm::scale(MV, glm::vec3(0.01f, 0.01f, 0.01f));
 	glm::mat4 MVP = P * MV;
+	GLuint MVP_id = glGetUniformLocation(programID, "MVP");
+	glUniformMatrix4fv(MVP_id, 1, GL_FALSE, &(MVP[0][0]));
 
-	GLuint MVP_id = glGetUniformLocation(programID, "MVP"); // pobierz lokalizację zmiennej 'uniform' "MV" w programie
+	glBindVertexArray(VAO[1]);
+
+	//glVertexAttrib3f(1, 1.0f, 1.0f, 0.0f);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	//glDrawElements(GL_TRIANGLES, 20, GL_UNSIGNED_INT, 0);
+
+	glVertexAttrib3f(1, 1.0f, 0.5f, 0.5f);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glDrawElements(GL_TRIANGLES, 422 * 840, GL_UNSIGNED_INT, 0);
+
+	//glm::mat4 MVP = P * MV;
+	MV = glm::translate(MV, glm::vec3(0.0f, 0.0f, -175.0f));
+	MV = glm::translate(MV, glm::vec3(0.0f, 0.0f, j));
+
+	MV = glm::scale(MV, glm::vec3(300.0f, 300.0f, 50.0f));
+	MVP = P * MV;
+	//GLuint MVP_id = glGetUniformLocation(programID, "MVP"); // pobierz lokalizację zmiennej 'uniform' "MV" w programie
 	glUniformMatrix4fv(MVP_id, 1, GL_FALSE, &(MVP[0][0]));	   // wyślij tablicę mv do lokalizacji "MV", która jest typu mat4	
-
 	
-	glVertexAttrib3f(1, 0.2f, 0.3f, 1.0f);
+	glVertexAttrib3f(1, 0.4f, 0.4f, 1.0f);
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glBindVertexArray(VAO[0]);
 	//glDrawElements(GL_TRIANGLES, 5, GL_UNSIGNED_INT, 0);
@@ -1480,37 +1497,23 @@ void rysuj(void)
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	//glVertexAttrib3f(1, 1.0f, 1.0f, 0.0f);
 	glDrawElements(GL_QUADS, 48, GL_UNSIGNED_INT, 0);
-	
 
-	MV = glm::translate(MV, glm::vec3(0.0f, i, 0.0));
-	MV = glm::scale(MV, glm::vec3(0.005f, 0.005f, 0.005f));
+	MV = glm::translate(MV, glm::vec3(0.0f, 0.0f, 20.0f));
+	//MV = glm::translate(MV, glm::vec3(0.0f, 0.0f, j));
+
+	//MV = glm::scale(MV, glm::vec3(1.5f, 0.5f, 0.5f));
 	MVP = P * MV;
 	glUniformMatrix4fv(MVP_id, 1, GL_FALSE, &(MVP[0][0]));
-	
-	glBindVertexArray(VAO[1]);
+
+	glBindVertexArray(VAO[0]);
 
 	//glVertexAttrib3f(1, 1.0f, 1.0f, 0.0f);
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	//glDrawElements(GL_TRIANGLES, 20, GL_UNSIGNED_INT, 0);
 
-	glVertexAttrib3f(1, 1.0f, 0.5f, 0.0f);
+	glVertexAttrib3f(1, 0.4f, 0.4f, 1.0f);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	glDrawElements(GL_TRIANGLES, 422*840, GL_UNSIGNED_INT, 0);
-
-	MV = glm::translate(MV, glm::vec3(0.0f, j, 0.0));
-	MV = glm::scale(MV, glm::vec3(0.5f, 0.5f, 0.5f));
-	MVP = P * MV;
-	glUniformMatrix4fv(MVP_id, 1, GL_FALSE, &(MVP[0][0]));
-
-	glBindVertexArray(VAO[1]);
-
-	//glVertexAttrib3f(1, 1.0f, 1.0f, 0.0f);
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	//glDrawElements(GL_TRIANGLES, 20, GL_UNSIGNED_INT, 0);
-
-	glVertexAttrib3f(1, 1.0f, 0.0f, 0.0f);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	glDrawElements(GL_TRIANGLES, 422 * 840, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_QUADS, 48, GL_UNSIGNED_INT, 0);
 	glFlush();
 	glutSwapBuffers();
 
